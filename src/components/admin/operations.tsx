@@ -343,7 +343,7 @@ const enrollments: ResourceConfig = {
         title="Cancelar matrícula"
         description={`Se cancelará la matrícula de ${r.student?.user?.name} en ${r.subject?.name} y se liberará el cupo.`}
         confirmLabel="Cancelar matrícula"
-        run={() => api(`/enrollments/${r._id}/cancel`, { method: "PATCH" })}
+        run={() => api(`/enrollments/${r._id}/cancel`, { method: "POST" })}
         onDone={reload}
       />
     ) : null,
@@ -372,17 +372,23 @@ export function SendNotice() {
 
   // Busca usuarios por nombre o correo mientras escribes (con 300 ms de espera)
   useEffect(() => {
+    let alive = true;
     if (search.trim().length < 2) {
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setHits([]);
-      return;
+      return () => {
+        alive = false;
+      };
     }
     const t = setTimeout(() => {
       api<Paginated<UserHit>>(`/users?q=${encodeURIComponent(search.trim())}&active=true&limit=6`)
-        .then((r) => setHits(r.data))
-        .catch(() => setHits([]));
+        .then((r) => alive && setHits(r.data))
+        .catch(() => alive && setHits([]));
     }, 300);
-    return () => clearTimeout(t);
+    return () => {
+      alive = false;
+      clearTimeout(t);
+    };
   }, [search]);
 
   async function send(event: FormEvent) {

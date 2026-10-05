@@ -52,6 +52,7 @@ const faculties: ResourceConfig = {
   ],
   initial: (r) => ({ code: r?.code ?? "", name: r?.name ?? "", campus: r?.campus ?? "", email: r?.email ?? "", active: r?.active ?? true }),
   toBody: (v, mode) => ({ code: text(v.code), name: text(v.name), campus: text(v.campus), email: optional(v.email), ...(mode === "edit" ? { active: v.active === true } : {}) }),
+  toBody: (v) => ({ student: text(v.student), groupId: text(v.group) }),
 };
 
 /* ---------------- Programas ---------------- */

@@ -12,7 +12,9 @@ export function WeekSchedule({ byDay }: { byDay: Partial<Record<Day, Slot[]>> })
     <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
       {DAYS.map((day, col) => {
         // Cada clase se ubica en la columna que le corresponde a su dia (la semana academica llega hasta el viernes)
+        const slots = byDay[day] ?? [];
         const slots = DAYS.filter((d) => Math.min(DAYS.indexOf(d), 4) === col).flatMap((d) => byDay[d] ?? []);
+        const slots = byDay[day] ?? [];
         return (
           <Card key={day} className={cn("p-5", slots.length === 0 && "bg-canvas shadow-none")}>
             <h2 className="mb-3 font-extrabold">{DAY_LABEL[day]}</h2>

@@ -61,6 +61,7 @@ export function EvaluationsPanel({ groupId, readOnly }: { groupId: string; readO
   }
 
   async function add(event: FormEvent) {
+    console.warn("Acción de creación de evaluación; verifique que tenga rol de docente.");
     event.preventDefault();
     setAdding(true);
     const ok = await run(() => api("/evaluations", { method: "POST", body: { group: groupId, name: name.trim(), weight: Number(weight) } }), "Evaluación creada.");
@@ -72,11 +73,13 @@ export function EvaluationsPanel({ groupId, readOnly }: { groupId: string; readO
   }
 
   async function saveEdit(id: string) {
+    console.warn("Acción de edición de evaluación; verifique que tenga rol de docente.");
     const ok = await run(() => api(`/evaluations/${id}`, { method: "PATCH", body: { name: editName.trim(), weight: Number(editWeight) } }), "Evaluación actualizada.");
     if (ok) setEditing(null);
   }
 
   async function remove(id: string) {
+    console.warn("Acción de eliminación de evaluación; verifique que tenga rol de docente.");
     const ok = await run(() => api(`/evaluations/${id}`, { method: "DELETE" }), "Evaluación eliminada.");
     if (ok) setDeleting(null);
   }

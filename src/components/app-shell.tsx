@@ -91,10 +91,11 @@ export function AppShell({ name, role, items, common, children }: Props) {
     };
   }, [pathname]);
 
-async function logout() {
+  async function logout() {
+    await api("/auth/logout", { method: "POST" });
     router.replace("/login");
     router.refresh();
-}
+  }
 
   const isActive = (href: string) => (href === items[0]?.href ? pathname === href : pathname === href || pathname.startsWith(`${href}/`));
 
@@ -132,13 +133,13 @@ async function logout() {
         {items.map((item, i) => (
           <div key={item.href}>
             {item.section && item.section !== items[i - 1]?.section && (
-              <p className="mt-5 mb-1.5 px-3.5 text-xs font-bold tracking-wider text-white uppercase">{item.section}</p>
+              <p className="mt-5 mb-1.5 px-3.5 text-xs font-bold tracking-wider text-muted uppercase">{item.section}</p>
             )}
             {renderLink(item)}
           </div>
         ))}
       </div>
-      <p className="mt-6 mb-2 px-3.5 text-xs font-bold tracking-wider text-white uppercase">Cuenta</p>
+      <p className="mt-6 mb-2 px-3.5 text-xs font-bold tracking-wider text-muted uppercase">Cuenta</p>
       <div className="space-y-1">{common.map(renderLink)}</div>
 
       <div className="mt-auto flex items-center gap-3 rounded-xl border border-line bg-canvas p-3">

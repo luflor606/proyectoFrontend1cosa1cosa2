@@ -109,6 +109,83 @@ Auditoria realizada sobre `proyectoFrontend1` con enfoque de depuracion frontend
 - Fix: el estado inactivo ahora usa `text-ink` desde el primer render; alcanza contraste 17.33:1 sobre blanco y no depende del hover.
 - Estado: corregido; lint pasa.
 
+## 14. Cerrar sesion solo redirigia y no eliminaba la cookie
+
+- Archivo: `proyectoFrontend1/src/components/app-shell.tsx`
+- Bug: la accion de cerrar sesion redirigia al login sin llamar a `/api/auth/logout`.
+- Impacto: la cookie `httpOnly` seguia activa y una visita posterior a una ruta protegida podia restaurar la sesion.
+- Fix: se llama al endpoint de logout para borrar la cookie antes de redirigir.
+- Estado: corregido.
+
+## 15. Titulos de seccion de navegacion eran invisibles
+
+- Archivo: `proyectoFrontend1/src/components/app-shell.tsx`
+- Bug: los titulos de seccion y "Cuenta" usaban texto blanco sobre el panel blanco.
+- Impacto: se perdia la agrupacion visual del menu y la orientacion entre opciones.
+- Fix: los titulos usan `text-muted` sobre el fondo claro.
+- Estado: corregido.
+
+## 16. Horarios del sabado se mostraban bajo viernes
+
+- Archivo: `proyectoFrontend1/src/components/week-schedule.tsx`
+- Bug: la agrupacion de dias limitaba las columnas al viernes y juntaba en esa tarjeta las clases del sabado.
+- Impacto: el estudiante o docente podia confundir el dia real de una clase.
+- Fix: cada tarjeta ahora lee unicamente `byDay[day]`, incluido sabado.
+- Estado: corregido.
+
+## Hallazgos pendientes de esta pasada
+
+Los siguientes bugs fueron confirmados durante la revision, pero se dejan abiertos en este envio para no presentar la auditoria como terminada.
+
+## 17. Matricula desde el administrador envia un campo incorrecto
+
+- Archivo: `proyectoFrontend1/src/components/admin/operations.tsx`
+- Bug: el formulario envia `group`, pero `CreateEnrollmentDto` espera `groupId`.
+- Impacto: la matricula administrativa falla en la validacion del backend.
+- Estado: pendiente.
+
+## 18. Etiquetas de dia y estado contienen errores
+
+- Archivo: `proyectoFrontend1/src/lib/format.ts`
+- Bug: lunes aparece como `Lrrrrunes` y el estado `reprobada` se etiqueta como "Aprobada".
+- Impacto: horarios y estados academicos muestran informacion incorrecta.
+- Estado: pendiente.
+
+## 19. Una nota de 3.0 se colorea como reprobada
+
+- Archivo: `proyectoFrontend1/src/app/(app)/estudiante/notas/page.tsx`
+- Bug: la nota individual usa `value <= PASSING` para el color de reprobado, aunque el backend aprueba con `finalGrade >= 3.0`.
+- Impacto: la nota minima aprobatoria se muestra en rojo.
+- Estado: pendiente.
+
+## 20. El acumulado parcial no respeta los pesos de evaluacion
+
+- Archivo: `proyectoFrontend1/src/app/(app)/estudiante/notas/page.tsx`
+- Bug: se calcula la media aritmetica de las notas registradas, no la suma ponderada que usa el backend.
+- Impacto: el acumulado mostrado puede diferir de los puntos reales obtenidos segun el porcentaje de cada evaluacion.
+- Estado: pendiente.
+
+## 21. El tono ambar de algunas materias tiene bajo contraste
+
+- Archivos: `proyectoFrontend1/src/lib/format.ts`, `proyectoFrontend1/src/app/globals.css`
+- Bug: `accent-600` sobre `accent-100` tiene contraste 2.48:1.
+- Impacto: codigos de materia con ese tono son dificiles de leer sobre su fondo.
+- Estado: pendiente.
+
+## 22. Los controles de cada franja horaria repiten IDs
+
+- Archivo: `proyectoFrontend1/src/components/admin/resource-manager.tsx`
+- Bug: los campos "Dia", "Inicio", "Fin" y "Salon" repiten el mismo ID al agregar varias franjas.
+- Impacto: las etiquetas pueden asociarse al control equivocado y el arbol de accesibilidad contiene IDs duplicados.
+- Estado: pendiente.
+
+## 23. El formulario de restablecer clave valida menos que el backend
+
+- Archivo: `proyectoFrontend1/src/components/admin/configs.tsx`
+- Bug: el boton solo exige ocho caracteres, pero el backend tambien exige letras y numeros.
+- Impacto: el formulario permite enviar claves que el backend rechaza.
+- Estado: pendiente.
+
 ## Verificacion
 
 - `npm run lint`: pasa sin errores ni warnings.

@@ -10,10 +10,7 @@ type Slot = ScheduleSlot & { enrolled?: number };
 export function WeekSchedule({ byDay }: { byDay: Partial<Record<Day, Slot[]>> }) {
   return (
     <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-      {DAYS.map((day, col) => {
-        // Cada clase se ubica en la columna que le corresponde a su dia (la semana academica llega hasta el viernes)
-        const slots = byDay[day] ?? [];
-        const slots = DAYS.filter((d) => Math.min(DAYS.indexOf(d), 4) === col).flatMap((d) => byDay[d] ?? []);
+      {DAYS.map((day) => {
         const slots = byDay[day] ?? [];
         return (
           <Card key={day} className={cn("p-5", slots.length === 0 && "bg-canvas shadow-none")}>
